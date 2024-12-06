@@ -13,6 +13,7 @@ def home():
 def get_transcript():
     video_id = request.form.get("video_id")
     language = request.form.get("language")
+    filename = None  # Ensure filename is defined before use
 
     try:
         # Fetch transcript in the specified language
@@ -30,12 +31,14 @@ def get_transcript():
         return send_file(filename, as_attachment=True)
 
     except Exception as e:
-        return f"Fehler: {e}", 400
+        # Return an error response with details
+        return f"An error occurred: {e}", 400
 
     finally:
-        # Clean up the file after sending it
-        if os.path.exists(filename):
+        # Clean up the file if it was created
+        if filename and os.path.exists(filename):
             os.remove(filename)
+
 
 if __name__ == "__main__":
     import os
